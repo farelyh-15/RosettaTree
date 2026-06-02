@@ -7,13 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const manualCalcBox = document.getElementById("manualCalcBox");
     const quizChips = document.querySelectorAll(".chip-btn");
 
-    // Elemen Kontrol Playback Baru
     const btnPrevStep = document.getElementById("btnPrevStep");
     const btnPlayPause = document.getElementById("btnPlayPause");
     const btnNextStep = document.getElementById("btnNextStep");
     const stepIndicator = document.getElementById("stepIndicator");
 
-    let totalElementsArray = []; 
+    let stepCombinations = []; // Timeline status gabungan per langkah
     let currentStepIndex = 0;   
     let autoPlayInterval = null;
 
@@ -33,12 +32,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // Kontrol Tombol Langkah Bertahap
         btnNextStep.addEventListener("click", () => {
             stopAutoPlay();
-            if (currentStepIndex < totalElementsArray.length) {
+            if (currentStepIndex < stepCombinations.length - 1) {
                 currentStepIndex++;
-                renderCurrentTreeStep();
+                renderTreeFromSteps();
             }
         });
 
@@ -46,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
             stopAutoPlay();
             if (currentStepIndex > 0) {
                 currentStepIndex--;
-                renderCurrentTreeStep();
+                renderTreeFromSteps();
             }
         });
 
@@ -65,22 +63,104 @@ document.addEventListener("DOMContentLoaded", () => {
         const freqMap = {};
         for (let char of text) { freqMap[char] = (freqMap[char] || 0) + 1; }
 
-        let nodes = Object.keys(freqMap).map(char => ({ char, freq: freqMap[char], left: null, right: null }));
-        if (nodes.length === 0) return;
+        // Bangun antrean awal node dengan ID acak yang unik stabil
+        let queue = Object.keys(freqMap).map(char => ({
+            id: 'leaf_' + char + '_' + Math.random().toString(36).substr(2, 5),
+            char,
+            freq: freqMap[char],
+            left: null,
+            right: null
+        }));
 
+        if (queue.length === 0) return;
+
+        // Urutkan alfabet dasar asli
+        queue.sort((a, b) => a.freq - b.freq || a.char.localeCompare(b.char));
+
+        let mergeHistory = [];
         let root;
-        if (nodes.length === 1) {
-            root = { char: null, freq: nodes[0].freq, left: nodes[0], right: null };
+
+        if (queue.length === 1) {
+            root = {
+                id: 'root_single_' + Math.random().toString(36).substr(2, 5),
+                char: null, freq: queue[0].freq, left: queue[0], right: null
+            };
+            mergeHistory.push({ parentId: root.id, leftId: queue[0].id, rightId: null });
         } else {
-            while (nodes.length > 1) {
-                nodes.sort((a, b) => a.freq - b.freq);
-                const left = nodes.shift();
-                const right = nodes.shift();
-                nodes.push({ char: null, freq: left.freq + right.freq, left, right });
+            // Jalankan algoritma huffman murni dan simpan riwayat kronologis penggabungan rumpun
+            let forest = [...queue];
+            while (forest.length > 1) {
+                forest.sort((a, b) => a.freq - b.freq);
+                const left = forest.shift();
+                const right = forest.shift();
+                
+                const parent = {
+                    id: 'internal_' + left.freq + '_' + right.freq + '_' + Math.random().toString(36).substr(2, 5),
+                    char: null,
+                    freq: left.freq + right.freq,
+                    left,
+                    right
+                };
+                
+                mergeHistory.push({ parentId: parent.id, leftId: left.id, rightId: right.id });
+                forest.push(parent);
             }
-            root = nodes[0];
+            root = forest[0];
         }
 
+        // Tentukan nilai koordinat absolut tunggal untuk seluruh pohon agar tidak terputus/meloncat
+        let coords = {};
+        let edges = [];
+        
+        function assignCoords(node, depth, xStart, xEnd) {
+            if (!node) return;
+            const x = (xStart + xEnd) / 2;
+            const y = 50 + depth * 75;
+
+            coords[node.id] = {
+                id: node.id, x, y, isLeaf: node.char !== null,
+                label: node.char ? `${node.char === " " ? "Spc" : node.char}:${node.freq}` : `${node.freq}`
+            };
+
+            if (node.left) {
+                edges.push({ parentId: node.id, childId: node.left.id, bit: "0", x1: x, y1: y, x2: (xStart + x) / 2, y2: 50 + (depth + 1) * 75 });
+                assignCoords(node.left, depth + 1, xStart, x);
+            }
+            if (node.right) {
+                edges.push({ parentId: node.id, childId: node.right.id, bit: "1", x1: x, y1: y, x2: (x + xEnd) / 2, y2: 50 + (depth + 1) * 75 });
+                assignCoords(node.right, depth + 1, x, xEnd);
+            }
+        }
+        assignCoords(root, 0, 40, 760);
+
+        // Buat Array Timeline Simulasi Berurutan (Step 0: Daun Saja -> Step Akhir: Pohon Utuh)
+        stepCombinations = [];
+        let leafNodesOnly = Object.values(coords).filter(c => c.isLeaf);
+        
+        // Simpan Langkah Awal (0)
+        stepCombinations.push({ nodes: [...leafNodesOnly], edges: [] });
+
+        let currentNodes = [...leafNodesOnly];
+        let currentEdges = [];
+
+        // Masukkan rumpun per gabungan induk ke riwayat langkah
+        mergeHistory.forEach(merge => {
+            const pNode = coords[merge.parentId];
+            if (pNode) currentNodes.push(pNode);
+
+            const eLeft = edges.find(e => e.parentId === merge.parentId && e.childId === merge.leftId);
+            if (eLeft) currentEdges.push(eLeft);
+
+            const eRight = edges.find(e => e.parentId === merge.parentId && e.childId === merge.rightId);
+            if (eRight) currentEdges.push(eRight);
+
+            stepCombinations.push({
+                nodes: [...currentNodes],
+                edges: [...currentEdges]
+            });
+        });
+
+        // Generate teks kode awalan
         const codes = {};
         function generateCodes(node, currentCode) {
             if (!node) return;
@@ -92,8 +172,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
         updateUI(text, freqMap, codes);
         
-        // Buat daftar antrean render grafis pohon biner huffman
-        generateTreeTimeline(root);
+        // Atur posisi awal langsung ke langkah terakhir (pohon lengkap)
+        currentStepIndex = stepCombinations.length - 1;
+        renderTreeFromSteps();
+    }
+
+    function renderTreeFromSteps() {
+        treeSvg.innerHTML = "";
+        if (stepCombinations.length === 0) return;
+
+        stepIndicator.textContent = `Langkah: ${currentStepIndex} / ${stepCombinations.length - 1}`;
+        
+        const activeState = stepCombinations[currentStepIndex];
+        if (!activeState) return;
+
+        // 1. Render Sisi Garis Penghubung Terlebih Dahulu
+        activeState.edges.forEach(edge => {
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", edge.x1); line.setAttribute("y1", edge.y1);
+            line.setAttribute("x2", edge.x2); line.setAttribute("y2", edge.y2);
+            line.setAttribute("stroke", "#fda4af"); line.setAttribute("stroke-width", "2.5");
+            line.setAttribute("class", "svg-edge");
+            treeSvg.appendChild(line);
+
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", (edge.x1 + edge.x2) / 2 - 5);
+            text.setAttribute("y", (edge.y1 + edge.y2) / 2 - 5);
+            text.setAttribute("fill", "#e11d48"); text.setAttribute("font-weight", "700");
+            text.setAttribute("font-size", "14px");
+            text.setAttribute("class", "svg-edge-text");
+            text.textContent = edge.bit;
+            treeSvg.appendChild(text);
+        });
+
+        // 2. Render Bulatan Simpul Node di Atas Garis (Mencegah Tabrakan Visual)
+        activeState.nodes.forEach(node => {
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            g.setAttribute("class", "svg-node");
+            
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", node.x); circle.setAttribute("cy", node.y);
+            circle.setAttribute("r", node.isLeaf ? "22" : "16");
+            circle.setAttribute("fill", node.isLeaf ? "#e11d48" : "#ffffff");
+            circle.setAttribute("stroke", node.isLeaf ? "#ffffff" : "#e11d48");
+            circle.setAttribute("stroke-width", "2.5");
+
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", node.x); text.setAttribute("y", node.y + 4);
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("fill", node.isLeaf ? "#ffffff" : "#e11d48");
+            text.setAttribute("font-size", "11px"); text.setAttribute("font-weight", "600");
+            text.textContent = node.label;
+            
+            g.appendChild(circle);
+            g.appendChild(text);
+            treeSvg.appendChild(g);
+        });
     }
 
     function updateUI(originalText, freqMap, codes) {
@@ -138,111 +272,17 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
-    // Fungsi Mengumpulkan Seluruh Komponen Objek Grafis Pohon ke Array Utama
-    function generateTreeTimeline(root) {
-        totalElementsArray = [];
-        const VIRTUAL_WIDTH = 800; 
-        
-        function traverse(node, depth, xStart, xEnd, pX, pY, isLeft) {
-            if (!node) return;
-            const x = (xStart + xEnd) / 2;
-            const y = 45 + depth * 75; 
-
-            if (pX !== null && pY !== null) {
-                totalElementsArray.push({
-                    type: 'line', x1: pX, y1: pY, x2: x, y2: y, label: isLeft ? "0" : "1",
-                    lx: (pX + x) / 2 - 5, ly: (pY + y) / 2 - 5, depth: depth
-                });
-            }
-
-            totalElementsArray.push({
-                type: 'node', x, y, isLeaf: node.char !== null,
-                label: node.char ? `${node.char === " " ? "Spc" : node.char}:${node.freq}` : `${node.freq}`,
-                depth: depth
-            });
-
-            traverse(node.left, depth + 1, xStart, x, x, y, true);
-            traverse(node.right, depth + 1, x, xEnd, x, y, false);
-        }
-
-        traverse(root, 0, 30, VIRTUAL_WIDTH - 30, null, null, null);
-
-        // Sortir penempatan agar elemen dengan kedalaman terbesar (daun) muncul terlebih dahulu secara berurutan
-        totalElementsArray.sort((a, b) => b.depth - a.depth);
-
-        // Reset indeks ke posisi akhir agar seluruh pohon langsung terlihat saat pertama proses selesai
-        currentStepIndex = totalElementsArray.length;
-        renderCurrentTreeStep();
-    }
-
-    // Menampilkan Komponen Berdasarkan Indeks Langkah Saat Ini
-    function renderCurrentTreeStep() {
-        treeSvg.innerHTML = "";
-        stepIndicator.textContent = `Langkah: ${currentStepIndex} / ${totalElementsArray.length}`;
-
-        const visibleElements = totalElementsArray.slice(0, currentStepIndex);
-
-        // Render Garis Terlebih Dahulu
-        visibleElements.forEach(el => {
-            if (el.type === 'line') {
-                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute("x1", el.x1); line.setAttribute("y1", el.y1);
-                line.setAttribute("x2", el.x2); line.setAttribute("y2", el.y2);
-                line.setAttribute("stroke", "#fda4af"); line.setAttribute("stroke-width", "2");
-                line.setAttribute("class", "svg-edge");
-                treeSvg.appendChild(line);
-
-                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                text.setAttribute("x", el.lx); text.setAttribute("y", el.ly);
-                text.setAttribute("fill", "#e11d48"); text.setAttribute("font-weight", "600");
-                text.setAttribute("font-size", "13px");
-                text.setAttribute("class", "svg-edge-text");
-                text.textContent = el.label;
-                treeSvg.appendChild(text);
-            }
-        });
-
-        // Render Lingkaran Node di Atas Garis
-        visibleElements.forEach(el => {
-            if (el.type === 'node') {
-                const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                g.setAttribute("class", "svg-node");
-                
-                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                circle.setAttribute("cx", el.x); circle.setAttribute("cy", el.y);
-                circle.setAttribute("r", el.isLeaf ? "22" : "16");
-                circle.setAttribute("fill", el.isLeaf ? "#e11d48" : "#ffffff");
-                circle.setAttribute("stroke", el.isLeaf ? "#ffffff" : "#e11d48");
-                circle.setAttribute("stroke-width", "2.5");
-
-                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                text.setAttribute("x", el.x); text.setAttribute("y", el.y + 4);
-                text.setAttribute("text-anchor", "middle");
-                text.setAttribute("fill", el.isLeaf ? "#ffffff" : "#e11d48");
-                text.setAttribute("font-size", "11px"); text.setAttribute("font-weight", "600");
-                text.textContent = el.label;
-                
-                g.appendChild(circle);
-                g.appendChild(text);
-                treeSvg.appendChild(g);
-            }
-        });
-    }
-
     function startAutoPlay() {
-        if (currentStepIndex >= totalElementsArray.length) {
-            currentStepIndex = 0; // Mengulang dari awal jika sudah penuh
-        }
+        if (currentStepIndex >= stepCombinations.length - 1) currentStepIndex = 0;
         btnPlayPause.textContent = "⏸ Jeda";
-        btnPlayPause.classList.add("playing");
         autoPlayInterval = setInterval(() => {
-            if (currentStepIndex < totalElementsArray.length) {
+            if (currentStepIndex < stepCombinations.length - 1) {
                 currentStepIndex++;
-                renderCurrentTreeStep();
+                renderTreeFromSteps();
             } else {
                 stopAutoPlay();
             }
-        }, 900); // Penambahan item baru setiap 0.9 detik secara smooth
+        }, 1300);
     }
 
     function stopAutoPlay() {
@@ -251,6 +291,5 @@ document.addEventListener("DOMContentLoaded", () => {
             autoPlayInterval = null;
         }
         btnPlayPause.textContent = "▶ Putar Otomatis";
-        btnPlayPause.classList.remove("playing");
     }
 });
