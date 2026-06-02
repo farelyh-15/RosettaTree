@@ -8,54 +8,106 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <header class="glass-nav">
         <div class="logo">Rosetta<span>Tree</span></div>
         <nav>
-            <a href="#beranda" class="nav-link active">Beranda</a>
+            <a href="#beranda" class="nav-link">Beranda</a>
             <a href="#teori" class="nav-link">Teori</a>
             <a href="#simulasi" class="nav-link">Simulator</a>
         </nav>
     </header>
 
-    <section id="beranda" class="hero section-reveal">
-        <div class="background-blobs">
-            <div class="blob blob-1"></div>
-            <div class="blob blob-2"></div>
-        </div>
-        <div class="hero-content">
-            <span class="badge">Matematika Diskrit</span>
-            <h1>Visualisasi Elegan <br><span class="gradient-text">Kode Awalan & Pohon Huffman</span></h1>
-            <p>Platform interaktif modern yang membantu Anda menganalisis kompresi data secara mendalam. Terinspirasi dari <em>Rosetta Stone</em>, dirancang untuk memecahkan kerumitan pohon biner menjadi visual yang mulus dan mudah dipahami.</p>
-            <div class="hero-buttons">
-                <a href="#simulasi" class="btn btn-primary">Mulai Simulasi</a>
-                <a href="#teori" class="btn btn-outline">Pelajari Konsep</a>
-            </div>
+    <section id="beranda" class="hero">
+        <span class="badge">Matematika Diskrit</span>
+        <h1>Visualisasi Elegan <br><span class="gradient-text">Kode Awalan & Pohon Huffman</span></h1>
+        <p>Platform interaktif yang membantu Anda menganalisis kompresi data. Terinspirasi dari <em>Rosetta Stone</em>, dirancang untuk memecahkan kerumitan pohon biner menjadi visual yang mulus, responsif, dan mudah dipahami.</p>
+        <div>
+            <a href="#simulasi" class="btn btn-primary">Mulai Simulasi</a>
         </div>
     </section>
 
-    <section id="teori" class="theory-section section-reveal">
+    <section id="teori">
         <div class="section-title">
             <h2>Konsep Dasar</h2>
-            <p>Mengapa kita membutuhkan Kode Awalan?</p>
+            <p>Materi Matematika Diskrit Informatika</p>
         </div>
-        
         <div class="modern-grid">
             <div class="glass-card">
                 <div class="icon-wrap">🌳</div>
                 <h3>Pohon Berakar & Biner</h3>
-                <p>Graf terhubung tanpa sirkuit yang diberi arah. Pada pohon biner, simpul maksimal memiliki 2 anak (Kiri untuk bit <code>0</code>, Kanan untuk bit <code>1</code>).</p>
+                <p>Graf terhubung tanpa sirkuit. Pada pohon biner, simpul maksimal memiliki 2 anak (Kiri untuk bit <code>0</code>, Kanan untuk bit <code>1</code>).</p>
             </div>
             <div class="glass-card">
                 <div class="icon-wrap">🏷️</div>
                 <h3>Syarat Mutlak Kode Awalan</h3>
-                <p>Tidak boleh ada satu pun kode yang menjadi awalan (<em>prefix</em>) bagi kode lainnya. Ini menjamin data dapat didekodekan komputer tanpa ambiguitas.</p>
+                <p>Tidak boleh ada satu pun kode yang menjadi awalan (<em>prefix</em>) bagi kode lainnya. Ini menjamin data dapat didekodekan secara unik.</p>
             </div>
-            
             <div class="glass-card span-full compare-box">
                 <div class="compare valid">
                     <h4>✅ Valid (Prefix Code)</h4>
-                    <p>Contoh: <code>A=0</code>, <code>B=10</code>, <code>C=110</code>. <br>Pesan dibaca berurutan tanpa celah kesalahan.</p>
+                    <p>Contoh: <code>A=0</code>, <code>B=10</code>, <code>C=110</code>. Pesan dibaca berurutan tanpa ambiguitas.</p>
                 </div>
                 <div class="compare invalid">
                     <h4>❌ Tidak Valid</h4>
-                    <p>Contoh: <code>A=1</code>, <code>C=10</code>. <br>Ambiguitas terjadi karena A
+                    <p>Contoh: <code>A=1</code>, <code>C=10</code>. Salah karena A (1) adalah awalan dari C (10).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="simulasi">
+        <div class="section-title">
+            <h2>Simulator Interaktif</h2>
+            <p>Pilih kasus uji di bawah ini atau ketik teks sendiri untuk membuat Pohon Huffman.</p>
+        </div>
+
+        <div class="quiz-chips">
+            <button class="chip-btn" data-text="STRUKTUR DATA">STRUKTUR DATA</button>
+            <button class="chip-btn" data-text="LOGIKA INFORMATIKA">LOGIKA INFORMATIKA</button>
+            <button class="chip-btn" data-text="ALGORITMA">ALGORITMA</button>
+            <button class="chip-btn" data-text="CYBER SECURITY">CYBER SECURITY</button>
+            <button class="chip-btn" data-text="MAHASISWA SUKSES">MAHASISWA SUKSES</button>
+        </div>
+
+        <div class="app-layout">
+            <div class="glass-card">
+                <div class="input-modern">
+                    <input type="text" id="textInput" placeholder="Ketik kalimat..." value="STRUKTUR DATA">
+                    <button id="btnProcess" class="btn btn-primary" style="width: 100%;">Visualisasikan</button>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table id="resultTable">
+                        <thead>
+                            <tr>
+                                <th>Simbol</th>
+                                <th>Freq (f)</th>
+                                <th>Bit (l)</th>
+                                <th>Kode</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div id="compressionStats" class="modern-stats"></div>
+            </div>
+
+            <div class="glass-card" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 10px; font-size:1.1rem;">Pohon Biner (Huffman Tree)</h3>
+                <div class="canvas-container">
+                    <svg id="treeSvg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet"></svg>
+                </div>
+                <div id="manualCalcBox" class="modern-manual-calc"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>RosettaTree &copy; 2026 - Modern Data Compression Visualizer</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
