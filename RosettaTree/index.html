@@ -32,25 +32,25 @@
             <h2>Konsep Dasar</h2>
             <p>Materi Kuliah Matematika Diskrit Informatika</p>
         </div>
-        <div class="modern-grid">
-            <div class="glass-card">
+        <div class="theory-grid">
+            <div class="theory-card">
                 <div class="icon-wrap">🌳</div>
                 <h3>Pohon Berakar & Biner</h3>
                 <p>Graf terhubung tanpa sirkuit. Pada pohon biner, simpul maksimal memiliki 2 anak (Kiri untuk bit <code>0</code>, Kanan untuk bit <code>1</code>).</p>
             </div>
-            <div class="glass-card">
+            <div class="theory-card">
                 <div class="icon-wrap">🏷️</div>
                 <h3>Syarat Mutlak Kode Awalan</h3>
-                <p>Tidak boleh ada satu pun kode yang menjadi awalan (<em>prefix</em>) bagi kode lainnya. Ini menjamin data dapat didekodekan secara unik.</p>
+                <p>Tidak boleh ada satu pun kode yang menjadi awalan (<em>prefix</em>) bagi kode lainnya. Ini menjamin data dapat didekodekan secara unik dan aman oleh komputer.</p>
             </div>
-            <div class="glass-card span-full compare-box">
+            <div class="theory-card span-full compare-container">
                 <div class="compare valid">
                     <h4>✅ Valid (Prefix Code)</h4>
-                    <p>Contoh: <code>A=0</code>, <code>B=10</code>, <code>C=110</code>. Pesan dibaca berurutan tanpa ambiguitas komputer.</p>
+                    <p>Contoh: <code>A=0</code>, <code>B=10</code>, <code>C=110</code>. Pesan dapat langsung dibaca berurutan dari depan tanpa ambiguitas komputer.</p>
                 </div>
                 <div class="compare invalid">
                     <h4>❌ Tidak Valid</h4>
-                    <p>Contoh: <code>A=1</code>, <code>C=10</code>. Mengandung ambiguitas karena A (1) merupakan awalan asli dari C (10).</p>
+                    <p>Contoh: <code>A=1</code>, <code>C=10</code>. Mengandung ambiguitas tinggi karena kode A (1) merupakan struktur awalan dari kode C (10).</p>
                 </div>
             </div>
         </div>
@@ -96,12 +96,12 @@
             </div>
 
             <div class="panel-visual glass-card">
-                <h3 class="panel-title">Struktur Pembuatan Pohon Huffman</h3>
+                <h3 class="panel-title">Struktur Pembuatan Pohon Huffman Berurutan</h3>
                 
                 <div class="playback-controls">
-                    <button id="btnPrevStep" class="btn-step" title="Langkah Sebelumnya">⏮ Semenjak</button>
+                    <button id="btnPrevStep" class="btn-step" title="Langkah Sebelumnya">⏮ Mundur</button>
                     <button id="btnPlayPause" class="btn-step btn-play" title="Putar Otomatis">▶ Putar Otomatis</button>
-                    <button id="btnNextStep" class="btn-step" title="Langkah Selanjutnya">Selanjutnya ⏭</button>
+                    <button id="btnNextStep" class="btn-step" title="Langkah Selanjutnya">Maju ⏭</button>
                     <span id="stepIndicator" class="step-counter">Langkah: 0 / 0</span>
                 </div>
 
