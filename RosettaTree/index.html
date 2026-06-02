@@ -21,7 +21,7 @@
     <section id="beranda" class="hero">
         <span class="badge">Matematika Diskrit</span>
         <h1>Visualisasi Elegan <br><span class="gradient-text">Kode Awalan & Pohon Huffman</span></h1>
-        <p>Platform interaktif yang membantu Anda menganalisis kompresi data. Terinspirasi dari <em>Rosetta Stone</em>, dirancang untuk memecahkan kerumitan pohon biner menjadi visual yang mulus, responsif, dan mudah dipahami.</p>
+        <p>Platform interaktif yang membantu Anda menganalisis kompresi data. Terinstrumen khusus untuk memecahkan kerumitan struktur pohon biner menjadi visual yang mulus, responsif, dan mudah dipahami secara instan.</p>
         <div>
             <a href="#simulasi" class="btn btn-primary">Mulai Simulasi</a>
         </div>
@@ -30,7 +30,7 @@
     <section id="teori">
         <div class="section-title">
             <h2>Konsep Dasar</h2>
-            <p>Materi Matematika Diskrit Informatika</p>
+            <p>Materi Kuliah Matematika Diskrit Informatika</p>
         </div>
         <div class="modern-grid">
             <div class="glass-card">
@@ -46,11 +46,11 @@
             <div class="glass-card span-full compare-box">
                 <div class="compare valid">
                     <h4>✅ Valid (Prefix Code)</h4>
-                    <p>Contoh: <code>A=0</code>, <code>B=10</code>, <code>C=110</code>. Pesan dibaca berurutan tanpa ambiguitas.</p>
+                    <p>Contoh: <code>A=0</code>, <code>B=10</code>, <code>C=110</code>. Pesan dibaca berurutan tanpa ambiguitas komputer.</p>
                 </div>
                 <div class="compare invalid">
                     <h4>❌ Tidak Valid</h4>
-                    <p>Contoh: <code>A=1</code>, <code>C=10</code>. Salah karena A (1) adalah awalan dari C (10).</p>
+                    <p>Contoh: <code>A=1</code>, <code>C=10</code>. Mengandung ambiguitas karena A (1) merupakan awalan asli dari C (10).</p>
                 </div>
             </div>
         </div>
@@ -59,22 +59,23 @@
     <section id="simulasi">
         <div class="section-title">
             <h2>Simulator Interaktif</h2>
-            <p>Pilih kasus uji di bawah ini atau ketik teks sendiri untuk membuat Pohon Huffman.</p>
-        </div>
-
-        <div class="quiz-chips">
-            <button class="chip-btn" data-text="STRUKTUR DATA">STRUKTUR DATA</button>
-            <button class="chip-btn" data-text="LOGIKA INFORMATIKA">LOGIKA INFORMATIKA</button>
-            <button class="chip-btn" data-text="ALGORITMA">ALGORITMA</button>
-            <button class="chip-btn" data-text="CYBER SECURITY">CYBER SECURITY</button>
-            <button class="chip-btn" data-text="MAHASISWA SUKSES">MAHASISWA SUKSES</button>
+            <p>Ketik teks kustom Anda sendiri untuk membentuk visualisasi pohon bertahap.</p>
         </div>
 
         <div class="app-layout">
-            <div class="glass-card">
+            <div class="panel-control glass-card">
+                <h3 class="panel-title">Input & Analisis Data</h3>
+                
                 <div class="input-modern">
-                    <input type="text" id="textInput" placeholder="Ketik kalimat..." value="STRUKTUR DATA">
-                    <button id="btnProcess" class="btn btn-primary" style="width: 100%;">Visualisasikan</button>
+                    <input type="text" id="textInput" placeholder="Ketik kalimat di sini..." value="STRUKTUR DATA">
+                    <button id="btnProcess" class="btn btn-primary">Proses</button>
+                </div>
+
+                <div class="quiz-chips">
+                    <button class="chip-btn" data-text="STRUKTUR DATA">STRUKTUR DATA</button>
+                    <button class="chip-btn" data-text="LOGIKA INFORMATIKA">LOGIKA</button>
+                    <button class="chip-btn" data-text="ALGORITMA">ALGORITMA</button>
+                    <button class="chip-btn" data-text="CYBER SECURITY">CYBER</button>
                 </div>
                 
                 <div class="table-wrapper">
@@ -94,10 +95,18 @@
                 <div id="compressionStats" class="modern-stats"></div>
             </div>
 
-            <div class="glass-card" style="padding: 1.5rem;">
-                <h3 style="margin-bottom: 10px; font-size:1.1rem;">Pohon Biner (Huffman Tree)</h3>
+            <div class="panel-visual glass-card">
+                <h3 class="panel-title">Struktur Pembuatan Pohon Huffman</h3>
+                
+                <div class="playback-controls">
+                    <button id="btnPrevStep" class="btn-step" title="Langkah Sebelumnya">⏮ Semenjak</button>
+                    <button id="btnPlayPause" class="btn-step btn-play" title="Putar Otomatis">▶ Putar Otomatis</button>
+                    <button id="btnNextStep" class="btn-step" title="Langkah Selanjutnya">Selanjutnya ⏭</button>
+                    <span id="stepIndicator" class="step-counter">Langkah: 0 / 0</span>
+                </div>
+
                 <div class="canvas-container">
-                    <svg id="treeSvg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet"></svg>
+                    <svg id="treeSvg" viewBox="0 0 800 550" preserveAspectRatio="xMidYMid meet"></svg>
                 </div>
                 <div id="manualCalcBox" class="modern-manual-calc"></div>
             </div>
