@@ -38,72 +38,89 @@ nav { display: flex; gap: 1.5rem; }
 .nav-link { text-decoration: none; color: var(--text-muted); font-weight: 500; transition: color 0.3s; }
 .nav-link:hover { color: var(--primary); }
 
-/* SECTIONS GRID SYSTEM */
+/* SECTIONS */
 section { padding: 110px 4% 40px; max-width: 1260px; margin: 0 auto; }
 .section-title { text-align: center; margin-bottom: 2.5rem; }
 .section-title h2 { font-size: 2.2rem; font-weight: 700; color: var(--text-dark); }
 .section-title p { color: var(--text-muted); font-size: 0.95rem; margin-top: 5px; }
 
-/* HERO LAYOUT */
+/* HERO */
 .hero { text-align: center; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 .badge { background: #ffe4e6; color: var(--primary); padding: 0.4rem 1.2rem; border-radius: var(--radius-pill); font-weight: 600; font-size: 0.85rem; margin-bottom: 1.2rem; display: inline-block; }
 .hero h1 { font-size: 3.2rem; line-height: 1.2; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -0.5px; }
 .gradient-text { background: linear-gradient(135deg, var(--primary), #9f1239); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .hero p { font-size: 1.05rem; color: var(--text-muted); max-width: 680px; margin: 0 auto 2rem; }
 
-/* BUTTONS */
-.btn { padding: 0.75rem 2rem; border-radius: var(--radius-pill); font-weight: 600; font-size: 0.95rem; cursor: pointer; text-decoration: none; transition: all 0.2s ease; border: none; display: inline-block; text-align: center; }
-.btn-primary { background: var(--primary); color: white; box-shadow: 0 8px 20px rgba(225, 29, 72, 0.2); }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(225, 29, 72, 0.3); }
+/* FIX LAYOUT TEORI: LEBIH LUAS DAN AMAN DARI TEKS PECAH */
+.theory-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); 
+    gap: 1.5rem; 
+}
+.theory-card { 
+    background: white; 
+    border-radius: var(--radius-lg); 
+    padding: 2rem; 
+    box-shadow: var(--shadow-soft); 
+    border: 1px solid rgba(225, 29, 72, 0.06);
+}
+.theory-card h3 { font-size: 1.2rem; margin-bottom: 0.8rem; color: var(--text-dark); font-weight: 600; }
+.theory-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
 
-/* CARDS & THEORIES */
-.modern-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+.compare-container { 
+    grid-column: 1 / -1; 
+    display: flex; 
+    gap: 1.5rem; 
+    flex-wrap: wrap;
+    background: white;
+    padding: 1.5rem;
+}
+.compare { flex: 1; min-width: 280px; padding: 1.5rem; border-radius: var(--radius-md); }
+.compare h4 { font-size: 1.05rem; margin-bottom: 0.5rem; }
+.compare p { font-size: 0.9rem; }
+.compare.valid { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+.compare.invalid { background: #fff1f2; border: 1px solid #fecdd3; color: #991b1b; }
+
+/* LAYOUT APLIKASI UTAMA */
+.app-layout { display: grid; grid-template-columns: 410px 1fr; gap: 1.5rem; align-items: start; }
 .glass-card { background: white; border-radius: var(--radius-lg); padding: 1.8rem; box-shadow: var(--shadow-soft); border: 1px solid rgba(225, 29, 72, 0.06); }
 .panel-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 1.2rem; color: var(--text-dark); border-bottom: 2px solid #fce7f3; padding-bottom: 8px; }
-.icon-wrap { font-size: 2.2rem; margin-bottom: 0.8rem; }
-.glass-card h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--text-dark); }
-.glass-card p { color: var(--text-muted); font-size: 0.9rem; }
-.span-full { grid-column: 1 / -1; }
-.compare-box { display: flex; gap: 1.2rem; flex-wrap: wrap; }
-.compare { flex: 1; min-width: 240px; padding: 1.2rem; border-radius: var(--radius-md); }
-.compare.valid { background: #f0fdf4; border: 1px solid #bbf7d0; }
-.compare.invalid { background: #fff1f2; border: 1px solid #fecdd3; }
 
-/* APP LAYOUT WORKSPACE */
-.app-layout { display: grid; grid-template-columns: 410px 1fr; gap: 1.5rem; align-items: start; }
-
-/* INPUT */
+/* INPUT & BUTTONS */
 .input-modern { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
 .input-modern input { flex: 1; padding: 0.75rem 1.2rem; border: 2px solid #fce7f3; border-radius: var(--radius-pill); font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
 .input-modern input:focus { border-color: var(--primary); }
 .input-modern .btn { padding: 0.75rem 1.5rem; }
 
-/* CHIPS */
+.btn { padding: 0.75rem 2rem; border-radius: var(--radius-pill); font-weight: 600; font-size: 0.95rem; cursor: pointer; text-decoration: none; transition: all 0.2s ease; border: none; display: inline-block; text-align: center; }
+.btn-primary { background: var(--primary); color: white; box-shadow: 0 8px 20px rgba(225, 29, 72, 0.2); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(225, 29, 72, 0.3); }
+
 .quiz-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
 .chip-btn { background: #fff1f2; border: 1px solid var(--primary-light); color: var(--primary); padding: 0.3rem 0.8rem; border-radius: var(--radius-pill); font-weight: 500; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
 .chip-btn:hover { background: var(--primary); color: white; border-color: transparent; }
 
-/* TABEL COMPACT */
+/* TABEL COMPACT SCROLL */
 .table-wrapper { max-height: 200px; overflow-y: auto; background: white; border-radius: var(--radius-md); border: 1px solid #f1f5f9; margin-bottom: 1.2rem; }
 table { width: 100%; border-collapse: collapse; text-align: left; }
 th, td { padding: 0.65rem 0.8rem; font-size: 0.85rem; border-bottom: 1px solid #f1f5f9; }
 th { background: #fafaf9; color: var(--text-muted); font-weight: 600; position: sticky; top: 0; z-index: 2; }
 .badge-code { background: #ffe4e6; color: var(--primary); font-family: monospace; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
 
-/* STATS */
+/* PANELS STATS */
 .modern-stats { background: linear-gradient(135deg, var(--primary), #be123c); color: white; padding: 1rem 1.2rem; border-radius: var(--radius-md); font-size: 0.85rem; box-shadow: 0 8px 15px rgba(225, 29, 72, 0.15); }
 .modern-stats p { margin-bottom: 3px; display: flex; justify-content: space-between; }
 .modern-manual-calc { margin-top: 1.2rem; background: #fafaf9; border: 1px solid #e2e8f0; padding: 1rem; border-radius: var(--radius-md); font-size: 0.85rem; }
 
-/* KONTROL PLAYBACK / STEP-BY-STEP */
+/* KONTROL SIMULASI MANUAL BERTAHAP */
 .playback-controls { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; background: #fafaf9; padding: 10px; border-radius: var(--radius-md); border: 1px solid #e2e8f0; }
-.btn-step { background: white; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: var(--radius-pill); font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-dark); transition: all 0.2s; }
+.btn-step { background: white; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: var(--radius-pill); font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-dark); transition: all 0.2s; user-select: none; }
 .btn-step:hover { background: #f1f5f9; border-color: #94a3b8; }
 .btn-step.btn-play { background: var(--primary); color: white; border: none; min-width: 130px; }
 .btn-step.btn-play:hover { background: #be123c; }
 .step-counter { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-left: 10px; }
 
-/* KANVAS VISUAL SVG DENGAN ANMATED DOTS GRAPHICS */
+/* KANVAS VISUAL SVG */
 .canvas-container { 
     background-color: #ffffff;
     background-image: radial-gradient(#f1f5f9 1.5px, transparent 1.5px);
@@ -117,34 +134,26 @@ th { background: #fafaf9; color: var(--text-muted); font-weight: 600; position: 
 }
 svg { width: 100%; height: auto; min-height: 460px; }
 
-/* RE-ENGINEERED SMOOTH ANIMATIONS EFFECT */
+/* ANIMASI TRANSISI BARU YANG ULTRA SMOOTH & TIDAK TERPUTUS */
 .svg-edge {
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
-    animation: smoothDrawLine 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+    animation: smoothFadeIn 0.4s ease-out forwards;
 }
-
 .svg-edge-text {
     opacity: 0;
-    animation: smoothFadeIn 0.5s ease-out 0.4s forwards;
+    animation: smoothFadeIn 0.3s ease-out 0.2s forwards;
 }
-
 .svg-node {
     opacity: 0;
-    transform: scale(0.4);
+    transform: scale(0.6);
     transform-box: fill-box;
     transform-origin: center;
-    animation: smoothPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes smoothDrawLine {
-    to { stroke-dashoffset: 0; }
+    animation: smoothPopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes smoothFadeIn {
     to { opacity: 1; }
 }
-
 @keyframes smoothPopIn {
     to {
         opacity: 1;
